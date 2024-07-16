@@ -2,6 +2,6 @@ if game.PlaceId == 537413528 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Robincool69/skibidi38/main/babft"))()
 elseif game.PlaceId == 3431407618 then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Robincool69/skibidi38/main/islescriptforloadstring"))()
-elseif game.PlaceId == 13076380114 then
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/Robincool69/skibidi38/main/iypass'))()
+else
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Robincool69/skibidi38/main/iypass'))()
 end
