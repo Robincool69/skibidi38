@@ -1,135 +1,144 @@
-    local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-    
-    local Window = Rayfield:CreateWindow({
-        Name = "Babft",
-        LoadingTitle = "Welcome",
-        LoadingSubtitle = "by Donquavus",
-        ConfigurationSaving = {
-            Enabled = true,
-            FolderName = nil, -- Create a custom folder for your hub/game
-            FileName = "Don hub"
-        },
-        Discord = {
-            Enabled = false,
-            Invite = ".", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
-            RememberJoins = true -- Set this to false to make them join the discord every time they load it up
-        },
-        KeySystem = true, -- Set this to true to use our key system
-        KeySettings = {
-            Title = "Password",
-            Subtitle = "Enter password",
-            Note = "Password",
-            FileName = "KeyDon", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-            SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-            GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-            Key = {"Donquavus", "Robin"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-        }
-    })
-    
-    local MainTab = Window:CreateTab("Home", nil) -- Title, Image
-    local MainSection = MainTab:CreateSection("Main")
-    
-    Rayfield:Notify({
-        Title = "Welcome",
-        Content = "Don's Great hub",
-        Duration = 5,
-        Image = nil,
-        Actions = { -- Notification Buttons
-            Ignore = {
-                Name = "Ignore",
-                Callback = function()
-                    print("The user ignored ):")
-                end
-            }
-        },
-    })
-    
-    local Toggle = MainTab:CreateToggle({
-        Name = "Autofarm",
-        CurrentValue = false,
-        Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-        Callback = function(autofarmtoggle)
-            -- Custom Settings
-            getgenv().TreasureAutoFarm = {
-                Enabled = autofarmtoggle, -- Toggle the auto farm on and off
-                Teleport = 2, -- How fast between each teleport between the stages and stuff
-                TimeBetweenRuns = 5 -- How long to wait until it goes to the next run
-            }
-    
-            -- Services
-            local Players = game:GetService("Players")
-            local Workspace = game:GetService("Workspace")
-            local Lighting = game:GetService("Lighting")
-    
-            -- Vars
-            local LocalPlayer = Players.LocalPlayer
-    
-            -- Function to perform auto-farm
-            local function autoFarm(currentRun)
-                local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-                local NormalStages = Workspace:WaitForChild("BoatStages"):WaitForChild("NormalStages")
-    
-                for i = 1, 10 do
-                    local Stage = NormalStages:FindFirstChild("CaveStage" .. i)
-                    if Stage then
-                        local DarknessPart = Stage:FindFirstChild("DarknessPart")
-                        if DarknessPart then
-                            -- Teleport to next stage
-                            print("Teleporting to next stage: Stage " .. i)
-                            Character.HumanoidRootPart.CFrame = DarknessPart.CFrame
-    
-                            -- Create a temp part under you
-                            local Part = Instance.new("Part", LocalPlayer.Character)
-                            Part.Anchored = true
-                            Part.Position = LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 6, 0)
-    
-                            -- Wait and remove temp part
-                            wait(getgenv().TreasureAutoFarm.Teleport)
-                            Part:Destroy()
-                        end
-                    else
-                        print("Stage " .. i .. " not found")
-                    end
-                end
-    
-                -- Teleport to the end
-                print("Teleporting to the end")
-                repeat
-                    wait()
-                    Character.HumanoidRootPart.CFrame = NormalStages:WaitForChild("TheEnd"):WaitForChild("GoldenChest"):WaitForChild("Trigger").CFrame
-                until Lighting.ClockTime ~= 14
-    
-                -- Wait until you have respawned
-                local Respawned = false
-                local Connection
-                Connection = LocalPlayer.CharacterAdded:Connect(function()
-                    Respawned = true
-                    Connection:Disconnect()
-                end)
-    
-                repeat wait() until Respawned
-                wait(getgenv().TreasureAutoFarm.TimeBetweenRuns)
-                print("Auto Farm: Run " .. currentRun .. " finished")
-            end
-    
-            -- Auto-farm loop
-            local autoFarmRun = 1
-            while wait() do
-                if getgenv().TreasureAutoFarm.Enabled then
-                    print("Initialising Auto Farm: Run " .. autoFarmRun)
-                    autoFarm(autoFarmRun)
-                    autoFarmRun = autoFarmRun + 1
-                else
-                    break
-                end
-            end
-        end,
-    })
-    
-    local Button = MainTab:CreateButton({
-        Name = "Infinite yield",
-        Callback = function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-        end,
-    })
+-- Attempt to load the Rayfield library
+local success, Rayfield = pcall(function()
+    return loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+end)
+
+-- Check if the library was loaded successfully
+if not success then
+    warn("Failed to load Rayfield library: " .. tostring(Rayfield))
+    return
 end
+
+-- Proceed with the rest of your script
+local Window = Rayfield:CreateWindow({
+    Name = "Babft",
+    LoadingTitle = "Welcome",
+    LoadingSubtitle = "by Donquavus",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil, -- Create a custom folder for your hub/game
+        FileName = "Don hub"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = ".", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+        RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+    },
+    KeySystem = true, -- Set this to true to use our key system
+    KeySettings = {
+        Title = "Password",
+        Subtitle = "Enter password",
+        Note = "Password",
+        FileName = "KeyDon", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+        SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+        GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+        Key = {"Donquavus", "Robin"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+    }
+})
+
+local MainTab = Window:CreateTab("Home", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Main")
+
+Rayfield:Notify({
+    Title = "Welcome",
+    Content = "Don's Great hub",
+    Duration = 5,
+    Image = nil,
+    Actions = { -- Notification Buttons
+        Ignore = {
+            Name = "Ignore",
+            Callback = function()
+                print("The user ignored ):")
+            end
+        }
+    },
+})
+
+local Toggle = MainTab:CreateToggle({
+    Name = "Autofarm",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(autofarmtoggle)
+        -- Custom Settings
+        getgenv().TreasureAutoFarm = {
+            Enabled = autofarmtoggle, -- Toggle the auto farm on and off
+            Teleport = 2, -- How fast between each teleport between the stages and stuff
+            TimeBetweenRuns = 5 -- How long to wait until it goes to the next run
+        }
+
+        -- Services
+        local Players = game:GetService("Players")
+        local Workspace = game:GetService("Workspace")
+        local Lighting = game:GetService("Lighting")
+
+        -- Vars
+        local LocalPlayer = Players.LocalPlayer
+
+        -- Function to perform auto-farm
+        local function autoFarm(currentRun)
+            local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+            local NormalStages = Workspace:WaitForChild("BoatStages"):WaitForChild("NormalStages")
+
+            for i = 1, 10 do
+                local Stage = NormalStages:FindFirstChild("CaveStage" .. i)
+                if Stage then
+                    local DarknessPart = Stage:FindFirstChild("DarknessPart")
+                    if DarknessPart then
+                        -- Teleport to next stage
+                        print("Teleporting to next stage: Stage " .. i)
+                        Character.HumanoidRootPart.CFrame = DarknessPart.CFrame
+
+                        -- Create a temp part under you
+                        local Part = Instance.new("Part", LocalPlayer.Character)
+                        Part.Anchored = true
+                        Part.Position = LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 6, 0)
+
+                        -- Wait and remove temp part
+                        wait(getgenv().TreasureAutoFarm.Teleport)
+                        Part:Destroy()
+                    end
+                else
+                    print("Stage " .. i .. " not found")
+                end
+            end
+
+            -- Teleport to the end
+            print("Teleporting to the end")
+            repeat
+                wait()
+                Character.HumanoidRootPart.CFrame = NormalStages:WaitForChild("TheEnd"):WaitForChild("GoldenChest"):WaitForChild("Trigger").CFrame
+            until Lighting.ClockTime ~= 14
+
+            -- Wait until you have respawned
+            local Respawned = false
+            local Connection
+            Connection = LocalPlayer.CharacterAdded:Connect(function()
+                Respawned = true
+                Connection:Disconnect()
+            end)
+
+            repeat wait() until Respawned
+            wait(getgenv().TreasureAutoFarm.TimeBetweenRuns)
+            print("Auto Farm: Run " .. currentRun .. " finished")
+        end
+
+        -- Auto-farm loop
+        local autoFarmRun = 1
+        while wait() do
+            if getgenv().TreasureAutoFarm.Enabled then
+                print("Initialising Auto Farm: Run " .. autoFarmRun)
+                autoFarm(autoFarmRun)
+                autoFarmRun = autoFarmRun + 1
+            else
+                break
+            end
+        end
+    end,
+})
+
+local Button = MainTab:CreateButton({
+    Name = "Infinite yield",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+    end,
+})
