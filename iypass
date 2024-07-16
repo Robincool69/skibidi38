@@ -36,10 +36,27 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
+local MainTab = Window:CreateTab("Home", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Main")
+
+Rayfield:Notify({
+    Title = "Welcome",
+    Content = "Don's Great hub",
+    Duration = 5,
+    Image = nil,
+    Actions = { -- Notification Buttons
+        Ignore = {
+            Name = "Ignore",
+            Callback = function()
+                print("The user ignored ):")
+            end
+        }
+    },
+})
 
 local Button = MainTab:CreateButton({
-   Name = "Main script",
-   Callback = function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-   end,
+    Name = "Main script",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+    end,
 })
